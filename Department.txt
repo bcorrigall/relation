@@ -1,0 +1,4 @@
+dname,budget
+Finance,20000
+Sales,30000
+HR,25000

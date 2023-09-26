@@ -1,0 +1,4 @@
+name,email,Depar
+Alex,a@c,Sales
+Max,x@c,Finance
+Go,g@c,HR
