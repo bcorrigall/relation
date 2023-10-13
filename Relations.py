@@ -10,7 +10,7 @@ class Relation:
         self.rows = []
         self.filename = filename
 
-    #converts relation into table
+    #converts relation into string table
     def __str__(self):
         height = len(self.rows)
         width = len(self.columns)
@@ -50,23 +50,25 @@ class Relation:
                 i += 1
             rowData += "\n"
 
-
         return title + columnData + rowData
     
-    #imports table from another file
+    #imports table from a csv file
     def importTable(self, filename):
         with open (filename, 'r') as file:
             x = 0
             for line in file:
                 line = line.strip('\n').split(',')
                 if x == 0:
+                    #populates the column headers with the first row in the csv file
                     self.columns = line
                     x+=1
                 else:
+                    #populates row from csv file
                     self.rows.append(line)
-            
             return
     
+    #projects the selected fields into a new relation file
+    #takes name of columns as array, takes output file name as string
     def projection(self, selectedColumns, filename):
         with open (filename, 'w') as file:
             file.write(",".join(selectedColumns) + "\n")
@@ -75,11 +77,12 @@ class Relation:
                 x = 0
                 for column in self.columns:
                     if column in selectedColumns:
-                        
                         newRow.append(row[x])            
                     x+=1
                 file.write(",".join(newRow) + "\n")
 
+    #creates a new releation where rows that have matching values to the input are ported over
+    #takes name of column, desired value of column, the operator to compare desired value vs real value, and the output filename
     def selection(self, selectedColumn, selectedValue, operator, filename):
         with open (filename, 'w') as file:
             file.write(",".join(self.columns) + "\n")
@@ -111,7 +114,9 @@ class Relation:
                         file.write(",".join(row) + "\n")
             else:
                 pass
-            
+    
+    #multiplies each row of the relation by another relation
+    #takes another relation and an ouput file name
     def cartesianProduct(self, otherRelation, filename):
         with open (filename, 'w') as file:
             columns = ",".join(self.columns) + "," + ",".join(otherRelation.columns)
@@ -122,21 +127,22 @@ class Relation:
                     newRow = row+otherRow
                     file.write(",".join(newRow) + "\n")
 
+    #currently not working at full functrionality, but will undo a cartesian product operation
     def division(self, otherRelation, filename):
         with open (filename, 'w') as file:
             width = len(self.columns) - len(otherRelation.columns)
             newColumns = self.columns[0:width]
             file.write(",".join(newColumns) + "\n")
 
-            height = len(self.rows)
-
             i = 0
             for row in self.rows:
-                if i%len(otherRelation.rows) == 0:
+                if i%len(otherRelation.rows) == len(self.rows)//len(otherRelation.rows):
                     newRow = row[0:width]    
                     file.write(",".join(newRow) + "\n")
                 i += 1
 
+    #joins two relations based off of matching key pairs
+    #takes another relation, a key for itself, a key for the other relation, and the filename
     def join(self, otherRelation, key1, key2, filename):
         with open (filename, 'w') as file:
             columns = ",".join(self.columns) + "," + ",".join(otherRelation.columns)
@@ -151,6 +157,8 @@ class Relation:
                         newRow = row+otherRow
                         file.write(",".join(newRow) + "\n")
 
+    #creates a relation that is the matching components of two relations
+    #takes the other relation and the output filename
     def intersection(self, otherRelation, filename):
         with open (filename, 'w') as file:
             file.write(",".join(self.columns) + "\n")
@@ -162,6 +170,8 @@ class Relation:
                     if row == otherRow:
                         file.write(",".join(row) + "\n")
 
+    #creates a relation that is the complete non-duplicate components of two relations
+    #takes the other relation and the output filename
     def union(self, otherRelation, filename):
         with open (filename, 'w') as file:
             file.write(",".join(self.columns) + "\n")
@@ -175,6 +185,8 @@ class Relation:
                 if row not in self.rows:
                     file.write(",".join(row) + "\n")
 
+    #removes all matching components of another relation from itself
+    #takes the other relation and the output filename
     def minus(self, otherRelation, filename):
         with open (filename, 'w') as file:
             file.write(",".join(self.columns) + "\n")
