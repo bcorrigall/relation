@@ -1,5 +1,31 @@
 from Relations import *
 
+def main():
+    print("Relational Algebra Calculator V1")
+
+    while True:
+        user = input("To create a new relation, enter 1. To perform an operation on an existing relation, enter 2. To exit, enter 0.\n")
+        if(user == '0'):
+            print("Exiting calculator.\n")
+            break
+        elif(user == '1'):
+            pass
+        elif(user == '2'):
+            print("Formatting:")
+            print("Selection  - select <column name><operator><target value>[table name]")
+            print("Projection - project <column name>,<column name>,...[table name]")
+            print("Multiply   - product <table name>[table name]")
+            print("Division   - divide <table name>[table name]")
+            print("Key join   - join <table 2 name><key 1><key 2>[table 1 name]")
+            print("Intersect  - intersect <table name>[table name]")
+            print("Union      - union <table name>[table name]")
+            print("Minus      - minus <table name>[table name]")
+            queryParser()
+        else:
+            print("Input not recognized.\n")
+            pass
+            
+
 
 def queryParser():
     inputQuery = input("Enter your Query: ")
@@ -126,4 +152,4 @@ def queryMinus(tableName, action, layer):
 
     tempTable1.minus(tempTable2, "temptable" +str(layer)+".txt")
 
-queryParser()
+main()
